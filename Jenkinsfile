@@ -28,10 +28,12 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'docker login registry.hub.docker.com -u $DOCKER_USER -p $DOCKER_PASSWORD'
-                    sh "docker image tag ${imageName}:${imageTag} registry.hub.docker.com/${imageName}:${imageTag}"
-                    sh "docker push registry.hub.docker.com/${imageName}:${imageTag}"
+                withEnv(['PATH+EXTRA=C:\\Program Files\\Git\\usr\\bin']) {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh 'docker login registry.hub.docker.com -u $DOCKER_USER -p $DOCKER_PASSWORD'
+                        sh "docker image tag ${imageName}:${imageTag} registry.hub.docker.com/${imageName}:${imageTag}"
+                        sh "docker push registry.hub.docker.com/${imageName}:${imageTag}"
+                    }
                 }
             }
         }
