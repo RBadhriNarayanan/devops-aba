@@ -18,7 +18,7 @@ pipeline {
                 script {
                     // Define image name and tag
                     def imageName = 'my-python-app'
-                    def imageTag = "${BUILD_NUMBER+1}"
+                    def imageTag = "${BUILD_NUMBER}"
 
                     // Build the image
                     dockerImage = docker.build("${imageName}:${imageTag}")
