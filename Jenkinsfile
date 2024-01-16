@@ -18,7 +18,7 @@ pipeline {
                 script {
                     // Define image name and tag
                     def imageName = 'my-python-app'
-                    def imageTag = "${BUILD_NUMBER}"
+                    def imageTag = "${BUILD_NUMBER+1}"
 
                     // Build the image
                     dockerImage = docker.build("${imageName}:${imageTag}")
@@ -28,11 +28,10 @@ pipeline {
 
         stage('Push Docker Image') {
             steps {
-                script {
-                    // Push the image to the registry
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub') {
-                        dockerImage.push()
-                    }
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh "docker login registry.hub.docker.com -u $DOCKER_USER -p $DOCKER_PASSWORD"
+                    sh "docker image tag ${imageName}:${imageTag} registry.hub.docker.com/${imageName}:${imageTag}"
+                    sh "docker push registry.hub.docker.com/${imageName}:${imageTag}"
                 }
             }
         }
