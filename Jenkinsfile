@@ -3,7 +3,7 @@ pipeline {
 
     triggers {
         // Trigger pipeline on push events to any branch
-        githubPush(branches: [[name: 'main', branchFilter: 'sample.py']])
+        githubPush()
     }
 
     stages {
